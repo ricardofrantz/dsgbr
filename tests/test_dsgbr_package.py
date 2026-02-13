@@ -3,6 +3,7 @@ import numpy as np
 from dsgbr import (
     DSGBRDetectionConfig,
     DetectionConfig,
+    compute_support_series,
     dsgbr_detector,
     select_peaks_by_frequency_bands,
 )
@@ -90,3 +91,38 @@ def test_band_selection_is_deterministic_and_ordered():
     assert selected_f.size <= 4
     assert np.all(np.diff(selected_f) > 0)
     assert selected_f.size == len(selected_h)
+
+
+def test_detector_accepts_empty_input():
+    empty_f = np.array([], dtype=float)
+    empty_h = np.array([], dtype=float)
+
+    peak_f, peak_h = dsgbr_detector(empty_f, empty_h)
+    support = compute_support_series(empty_f, empty_h)
+
+    assert peak_f.size == 0
+    assert peak_h.size == 0
+    assert support["search_series"].size == 0
+    assert support["baseline_series"].size == 0
+    assert support["accepted_indices"].size == 0
+
+
+def test_support_series_returns_consistent_metadata():
+    frequencies = np.array([1e-3, 2e-3, 4e-3, 6e-3, 8e-3, 1e-2], dtype=float)
+    psd = np.array([0.8, 1.1, 3.2, 0.9, 2.2, 1.0], dtype=float)
+    config = {
+        "smooth": "savgol",
+        "smooth_window": 3,
+        "ratio_threshold": 1.4,
+        "baseline_window": 5,
+        "max_peaks": 4,
+    }
+
+    support = compute_support_series(frequencies, psd, case_info=config)
+
+    assert support["search_series"].shape == psd.shape
+    assert support["baseline_series"].shape == psd.shape
+    assert support["ratio_series"].shape == psd.shape
+    assert support["detector_config"]["ratio_threshold"] == 1.4
+    assert isinstance(support["detector_config"]["max_peaks"], int)
+    assert support["rthreshold"].shape == psd.shape

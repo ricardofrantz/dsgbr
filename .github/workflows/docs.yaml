@@ -10,7 +10,7 @@ on:
   pull_request:
     paths:
       - .github/workflows/docs.yaml
-      - docs/**
+      - dsgbr/*.md
       - README.md
       - pyproject.toml
 
@@ -32,5 +32,5 @@ jobs:
         with:
           use-quiet-mode: "yes"
           use-verbose-mode: "yes"
-          folder-path: "docs/"
+          folder-path: "."
           file-path: "README.md"

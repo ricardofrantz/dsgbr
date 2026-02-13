@@ -1,104 +1,96 @@
-# JFM_CS — Spectral Analysis Pipeline for Bluff-Body Wakes
+# DSGBR
 
-[![CI](https://github.com/ricardofrantz/JFM_CS/actions/workflows/ci.yml/badge.svg?branch=main)](https://github.com/ricardofrantz/JFM_CS/actions/workflows/ci.yml)
-[![Docs](https://github.com/ricardofrantz/JFM_CS/actions/workflows/docs.yaml/badge.svg?branch=main)](https://github.com/ricardofrantz/JFM_CS/actions/workflows/docs.yaml)
-[![PyPI - Package](https://img.shields.io/pypi/v/dsgbr.svg)](https://pypi.org/project/dsgbr/)
-[![License](https://img.shields.io/github/license/ricardofrantz/JFM_CS)](LICENSE)
+[![CI](https://github.com/ricardofrantz/dsgbr/actions/workflows/ci.yml/badge.svg?branch=main)](https://github.com/ricardofrantz/dsgbr/actions/workflows/ci.yml)
+[![Docs](https://github.com/ricardofrantz/dsgbr/actions/workflows/docs.yaml/badge.svg?branch=main)](https://github.com/ricardofrantz/dsgbr/actions/workflows/docs.yaml)
+[![PyPI](https://img.shields.io/pypi/v/dsgbr.svg)](https://pypi.org/project/dsgbr/)
+[![License](https://img.shields.io/badge/license-proprietary-red.svg)](LICENSE)
 [![Python](https://img.shields.io/pypi/pyversions/dsgbr.svg)](https://pypi.org/project/dsgbr/)
 
-Spectral analysis pipeline for fluid-dynamics wake data, centered on DSGBR peak detection and scientific reproducibility across spectral/phase-space analyses.
+## Why DSGBR exists
 
-This repository powers our JFM manuscript work on bluff-body wake transitions and supports publication-ready outputs in `data/`, `figures/`, and `paper/`.
+**DSGBR** (Dual Savitzky–Golay Baseline Ratio) is a reusable spectral peak detector
+for frequency-domain signals.
+It was designed for robust detection in dense, noisy spectra and is published as an
+independent Python package so it can be used in any project.
 
-## Prerequisites
+The detector builds a short-scale `SEARCH` signal and a longer-scale `BASELINE` signal
+using Savitzky–Golay filtering. A peak is accepted when `SEARCH / BASELINE`
+passes a configurable ratio threshold and additional spacing/guardrail rules.
 
-```bash
-int25   # Loads Intel oneAPI 2025 + Python venv (~/.venv)
-```
-
-## Quick Start
-
-```bash
-# Single case
-python process.py --shape sphere --cases 332
-
-# Parallel processing (4 workers)
-OMP_NUM_THREADS=4 python process.py --workers 4 --shape both
-
-# Fast peak-only refresh
-python process.py --peaks
-
-# Fractal diagnostics
-python process.py --fractal
-
-# Figures
-python plots/plot_main.py
-```
-
-## Install DSGBR
+## Install
 
 ```bash
-uv pip install -e .[dev]
 uv pip install dsgbr
+uv pip install -e ".[dev]"   # local development install
+```
+
+## Quick start
+
+```python
+import numpy as np
+from dsgbr import DetectionConfig, dsgbr_detector
+
+frequencies = np.array([1e-4, 5e-4, 1e-3, 2e-3, 5e-3, 1e-2, 2e-2])
+psd = np.array([0.9, 1.2, 2.1, 8.0, 3.0, 5.0, 1.2])
+
+case_info = {
+    "smooth": "savgol",
+    "smooth_window": 5,
+    "baseline_window_frac": 0.2,
+    "ratio_threshold": 1.8,
+    "max_peaks": 8,
+}
+
+peak_f, peak_h = dsgbr_detector(frequencies, psd, case_info=case_info)
+print("peaks", peak_f, peak_h)
+
+config = DetectionConfig.from_case_info(case_info)
+print("alias map", config.ratio_threshold)
 ```
 
 ```python
-from dsgbr import dsgbr_detector, detect_peaks_case_adaptive, DetectionConfig
+from dsgbr import compute_support_series
+
+support = compute_support_series(frequencies, psd, case_info={"smooth": "savgol"})
+print(sorted(support.keys()))
 ```
 
-Optional plotting support:
+## Public API
+
+- `dsgbr_detector(...)`  
+  Detect peaks from `frequencies` and `psd`.
+- `detect_peaks_case_adaptive(...)`  
+  Backward-compatible API alias.
+- `compute_support_series(...)`  
+  Return debug arrays used to interpret detection decisions.
+- `DetectionConfig` and `DSGBRDetectionConfig`  
+  Typed configuration object with aliases (`RT`, `SW`, `BWF`, `DH`, `DL`, `SF`, `MP`).
+- `select_peaks_by_frequency_bands(...)`  
+  Post-process high-count detections with band-aware down-selection.
+
+## Development and quality gates
+
+- Package tooling: `pyproject.toml`
+- QA/test extras:
+  - `uv pip install -e ".[qa]"`
+  - `uv pip install -e ".[tests]"`
+  - `uv run pytest`
+  - `uv build`
+  - `uv run twine check dist/*`
+
+### Optional plotting support
 
 ```bash
-uv pip install dsgbr[plotting]
+uv pip install -e ".[plotting]"
 ```
 
-## Repository Layout
+This adds optional helpers in plotting and examples that depend on `matplotlib`.
 
-| Path              | Purpose                                        |
-| ----------------- | ---------------------------------------------- |
-| `process.py`      | Main spectral workflow entry point             |
-| `case_configs.py` | Case definitions and DSGBR parameter sets      |
-| `core/`           | Shared scientific utilities                    |
-| `dsgbr/`          | DSGBR detector source and API                  |
-| `plots/`          | Publication figure scripts                     |
-| `docs/`           | Supplemental references and technical notes    |
-| `paper/`          | Manuscript sources (Overleaf-synced submodule) |
+## Repository structure
 
-## DSGBR package health checks
-
-```bash
-uv run pytest
-uv build
-uv run twine check dist/*
-```
-
-## Release and QA
-
-CI is orchestrated with `uv` using:
-
-- `.github/workflows/ci.yml`: lint + tests + package build matrix
-- `.github/workflows/docs.yaml`: docs link checks
-- `.github/workflows/check-links.yaml`: markdown link checks
-- `.github/workflows/update-pre-commits.yaml`: optional pre-commit refresh automation
-
-Package metadata uses `pyproject.toml` and `LICENSE` for SPDX-compliant proprietary licensing.
-
-## Project highlights
-
-### DSGBR peak detector (`dsgbr/`)
-
-Dual Savitzky–Golay Baseline Ratio (DSGBR) is tuned for high dynamic range spectra, with adaptive ratio tests and frequency-aware pruning.
-
-### Scientific pipeline features
-
-- Periodic/intermittent flow regime classification from spectral signatures
-- Correlation dimension and delay-embedding analysis in `core/`
-- Reproducible figures and artifact-rich intermediate `.npz` outputs
-
-## Dependencies
-
-```bash
-uv pip install numpy scipy matplotlib SciencePlots
-```
-
-Core data root defaults to `~/data/` (`core/spcfunc.py`).
+- `dsgbr/DSGBR.py` — core detection implementation
+- `dsgbr/__init__.py` — public package API
+- `dsgbr/DSGBR.md` — algorithm reference and practical parameter guide
+- `tests/` — deterministic package tests for importability and behavior
+- `.github/` — CI, release, and repository automation
+- `pyproject.toml` — packaging and tooling metadata

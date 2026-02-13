@@ -1,9 +1,10 @@
-# AI Agent Context for JFM_CS
+# AI Agent Context for DSGBR
 
 ## Project Overview
 
-This repository contains a scientific Python pipeline for spectral analysis and wake dynamics around bluff-body geometries.
-Core scientific modules are in `core/`; the DSGBR package is in `dsgbr/`.
+This repository is the standalone DSGBR Python package for spectral peak detection.
+Primary package code lives in `dsgbr/` and public API is exported in
+`dsgbr/__init__.py`.
 
 ## Build and Environment
 

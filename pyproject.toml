@@ -71,17 +71,17 @@ dev = [
 ]
 
 [project.urls]
-Homepage = "https://github.com/ricardofrantz/JFM_CS"
-Source = "https://github.com/ricardofrantz/JFM_CS"
-Tracker = "https://github.com/ricardofrantz/JFM_CS/issues"
-Documentation = "https://github.com/ricardofrantz/JFM_CS#readme"
+Homepage = "https://github.com/ricardofrantz/dsgbr"
+Source = "https://github.com/ricardofrantz/dsgbr"
+Tracker = "https://github.com/ricardofrantz/dsgbr/issues"
+Documentation = "https://github.com/ricardofrantz/dsgbr#readme"
 
 [tool.setuptools]
 package-dir = {"" = "."}
 
 [tool.setuptools.packages.find]
 where = ["."]
-include = ["core*", "dsgbr*"]
+include = ["dsgbr*"]
 
 [tool.ruff]
 line-length = 100
@@ -112,7 +112,7 @@ check-filenames = true
 [tool.coverage.run]
 branch = true
 relative_files = true
-source = ["core", "dsgbr", "tests"]
+source = ["dsgbr", "tests"]
 omit = ["*/__pycache__/*"]
 
 [tool.coverage.report]
