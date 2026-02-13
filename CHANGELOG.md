@@ -1,5 +1,11 @@
 # Changelog
 
+## [0.1.2] - 2026-02-13
+
+### Added
+
+- Python 3.13 and 3.14 to CI test matrix and PyPI classifiers.
+
 ## [0.1.1] - 2026-02-13
 
 ### Fixed
