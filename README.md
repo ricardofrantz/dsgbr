@@ -77,24 +77,24 @@ All parameters are set through `DetectionConfig` or passed as a dictionary
 via the `case_info` argument. Short aliases (RT, SW, BWF, etc.) are
 supported for concise configuration.
 
-| Parameter | Alias | Default | Description |
-|-----------|-------|---------|-------------|
-| `ratio_threshold` | RT | 1.8 | Min SEARCH/BASELINE ratio for acceptance |
-| `smooth_window` | SW | 3 | Savitzky-Golay window for SEARCH (odd, >= 3) |
-| `baseline_window_frac` | BWF | 0.001 | Baseline window as fraction of data length |
-| `distance_low` | DL | 2 | Min bin separation below `switch_frequency` |
-| `distance_high` | DH | 1 | Min bin separation above `switch_frequency` |
-| `switch_frequency` | SF | 0.02 | Frequency threshold for spacing rules |
-| `max_peaks` | MP | 25 | Maximum peaks returned |
-| `smooth_polyorder` | — | 2 | Polynomial order for SG filter |
-| `smooth_on_log` | — | True | Smooth log10(PSD) instead of linear |
-| `baseline_window` | — | None | Fixed baseline window (overrides BWF) |
-| `baseline_on_log` | — | True | Baseline smoothing in log domain |
-| `band_strategy` | — | proportional | Band allocation: proportional or equal |
-| `n_bands` | — | 10 | Number of logarithmic frequency bands |
-| `ulf_fmax` | — | 0.001 | ULF band upper frequency limit |
-| `ulf_min_q` | — | 9.0 | Minimum Q-factor for ULF peaks |
-| `ulf_max_points` | — | 5 | Maximum ULF peaks to retain |
+| Parameter              | Alias | Default      | Description                                  |
+| ---------------------- | ----- | ------------ | -------------------------------------------- |
+| `ratio_threshold`      | RT    | 1.8          | Min SEARCH/BASELINE ratio for acceptance     |
+| `smooth_window`        | SW    | 3            | Savitzky-Golay window for SEARCH (odd, >= 3) |
+| `baseline_window_frac` | BWF   | 0.001        | Baseline window as fraction of data length   |
+| `distance_low`         | DL    | 2            | Min bin separation below `switch_frequency`  |
+| `distance_high`        | DH    | 1            | Min bin separation above `switch_frequency`  |
+| `switch_frequency`     | SF    | 0.02         | Frequency threshold for spacing rules        |
+| `max_peaks`            | MP    | 25           | Maximum peaks returned                       |
+| `smooth_polyorder`     | —     | 2            | Polynomial order for SG filter               |
+| `smooth_on_log`        | —     | True         | Smooth log10(PSD) instead of linear          |
+| `baseline_window`      | —     | None         | Fixed baseline window (overrides BWF)        |
+| `baseline_on_log`      | —     | True         | Baseline smoothing in log domain             |
+| `band_strategy`        | —     | proportional | Band allocation: proportional or equal       |
+| `n_bands`              | —     | 10           | Number of logarithmic frequency bands        |
+| `ulf_fmax`             | —     | 0.001        | ULF band upper frequency limit               |
+| `ulf_min_q`            | —     | 9.0          | Minimum Q-factor for ULF peaks               |
+| `ulf_max_points`       | —     | 5            | Maximum ULF peaks to retain                  |
 
 ## Advanced usage
 
@@ -137,15 +137,15 @@ print(cfg.to_metadata())
 
 ## API reference
 
-| Function / Class | Description |
-|-----------------|-------------|
-| `dsgbr_detector(f, psd, *, case_info, return_support)` | Main detection pipeline |
-| `compute_support_series(f, psd, case_info)` | Return intermediate arrays for visualization |
-| `select_peaks_by_frequency_bands(f, h, *, max_peaks, strategy, n_bands)` | Band-balanced down-selection |
-| `find_nearest_frequency(target, frequencies, heights)` | Closest detected frequency lookup |
-| `DetectionConfig` | Frozen dataclass with 17 parameters |
-| `detect_peaks_case_adaptive(...)` | Deprecated alias for `dsgbr_detector` |
-| `DSGBR_PARAM_ALIASES` | Short-to-long parameter name mapping |
+| Function / Class                                                         | Description                                  |
+| ------------------------------------------------------------------------ | -------------------------------------------- |
+| `dsgbr_detector(f, psd, *, case_info, return_support)`                   | Main detection pipeline                      |
+| `compute_support_series(f, psd, case_info)`                              | Return intermediate arrays for visualization |
+| `select_peaks_by_frequency_bands(f, h, *, max_peaks, strategy, n_bands)` | Band-balanced down-selection                 |
+| `find_nearest_frequency(target, frequencies, heights)`                   | Closest detected frequency lookup            |
+| `DetectionConfig`                                                        | Frozen dataclass with 17 parameters          |
+| `detect_peaks_case_adaptive(...)`                                        | Deprecated alias for `dsgbr_detector`        |
+| `DSGBR_PARAM_ALIASES`                                                    | Short-to-long parameter name mapping         |
 
 ## Examples
 

@@ -103,7 +103,7 @@ convention = "numpy"
 pretty = true
 strict = true
 python_version = "3.10"
-exclude = ["docs/conf.py"]
+exclude = ["docs/conf.py", "tests/", "examples/"]
 
 [tool.codespell]
 skip = "docs/conf.py"

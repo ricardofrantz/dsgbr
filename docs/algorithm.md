@@ -9,10 +9,10 @@ regions. This guide documents the standalone package behavior for external users
 For frequencies `f` and PSD `P(f)`:
 
 1. Build `SEARCH` by smoothing `P(f)` (typically on log-scale).
-2. Build `BASELINE` from a longer-scale Savitzky–Golay smoothing pass.
-3. Candidate peaks are local maxima in `SEARCH` where `SEARCH / BASELINE >= ratio_threshold`.
-4. Apply spacing and ultra-low-frequency guardrails.
-5. Optionally down-select across frequency bands to satisfy `max_peaks`.
+1. Build `BASELINE` from a longer-scale Savitzky–Golay smoothing pass.
+1. Candidate peaks are local maxima in `SEARCH` where `SEARCH / BASELINE >= ratio_threshold`.
+1. Apply spacing and ultra-low-frequency guardrails.
+1. Optionally down-select across frequency bands to satisfy `max_peaks`.
 
 ## Public API
 
@@ -64,4 +64,3 @@ For most users, only `peak_frequencies` and `peak_heights` are required.
 
 This repository is independent of project-specific pipelines and was extracted
 for direct reuse in external projects.
-
