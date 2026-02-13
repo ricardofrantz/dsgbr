@@ -1,5 +1,21 @@
 # Changelog
 
+## [0.1.1] - 2026-02-13
+
+### Fixed
+
+- Pin all GitHub Actions to commit SHAs (zizmor compliance).
+- Disable uv cache in CI to prevent cache-poisoning warnings.
+- Add `--system` flag to `uv pip install` for CI runners.
+- Resolve mypy strict errors in `_detector.py`.
+- Exclude tests and examples from mypy strict checking.
+
+### Changed
+
+- Replace Hypothesis property-based tests with deterministic parametrized tests.
+- Remove `hypothesis` from dependencies.
+- Default branch renamed from `main` to `master`.
+
 ## [0.1.0] - 2026-02-13
 
 ### Added
@@ -14,5 +30,5 @@
 - `DSGBR.py` shim for `from dsgbr.DSGBR import ...` import paths.
 - Input validation in `DetectionConfig.__post_init__`.
 - NumPy-style docstrings throughout.
-- Comprehensive test suite with Hypothesis property-based tests.
+- Comprehensive test suite (113 tests, >90% coverage).
 - BSD 3-Clause license.
