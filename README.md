@@ -1,7 +1,7 @@
 # DSGBR
 
-[![CI](https://github.com/ricardofrantz/dsgbr/actions/workflows/ci.yml/badge.svg?branch=main)](https://github.com/ricardofrantz/dsgbr/actions/workflows/ci.yml)
-[![codecov](https://codecov.io/gh/ricardofrantz/dsgbr/branch/main/graph/badge.svg)](https://codecov.io/gh/ricardofrantz/dsgbr)
+[![CI](https://github.com/ricardofrantz/dsgbr/actions/workflows/ci.yml/badge.svg?branch=master)](https://github.com/ricardofrantz/dsgbr/actions/workflows/ci.yml)
+[![codecov](https://codecov.io/gh/ricardofrantz/dsgbr/branch/master/graph/badge.svg)](https://codecov.io/gh/ricardofrantz/dsgbr)
 [![PyPI](https://img.shields.io/pypi/v/dsgbr.svg)](https://pypi.org/project/dsgbr/)
 [![Python](https://img.shields.io/pypi/pyversions/dsgbr.svg)](https://pypi.org/project/dsgbr/)
 [![License](https://img.shields.io/badge/license-BSD--3--Clause-blue.svg)](LICENSE)
