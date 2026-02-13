@@ -48,11 +48,6 @@ repos:
           - mdformat-frontmatter
           - mdformat-footnote
 
-  - repo: https://github.com/kynan/nbstripout
-    rev: 0.8.1
-    hooks:
-      - id: nbstripout
-
   - repo: https://github.com/woodruffw/zizmor-pre-commit
     rev: v1.14.2
     hooks:

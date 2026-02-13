@@ -10,7 +10,7 @@ on:
   pull_request:
     paths:
       - .github/workflows/docs.yaml
-      - dsgbr/*.md
+      - docs/*.md
       - README.md
       - pyproject.toml
 
