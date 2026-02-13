@@ -28,6 +28,9 @@ htmlcov/
 *.swp
 *.swo
 
+# Lock files
+uv.lock
+
 # OS
 .DS_Store
 Thumbs.db

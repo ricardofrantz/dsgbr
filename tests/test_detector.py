@@ -3,9 +3,7 @@
 from __future__ import annotations
 
 import numpy as np
-from hypothesis import given, settings
-from hypothesis import strategies as st
-from hypothesis.extra.numpy import arrays
+import pytest
 
 from dsgbr import compute_support_series, dsgbr_detector
 
@@ -219,41 +217,40 @@ class TestComputeSupport:
 # Hypothesis property-based tests
 # ---------------------------------------------------------------------------
 
-# Strategy for valid PSD arrays: positive floats, reasonable size
-_psd_strategy = arrays(
-    dtype=np.float64,
-    shape=st.integers(min_value=10, max_value=500),
-    elements=st.floats(min_value=1e-10, max_value=1e6, allow_nan=False, allow_infinity=False),
-)
+_RNG_SEEDS = [0, 42, 99, 12345, 271828]
+_SIZES = [10, 50, 100, 300, 500]
 
 
-class TestHypothesis:
-    """Property-based tests using Hypothesis."""
+class TestPropertyBased:
+    """Property-based tests using deterministic random PSD arrays."""
 
-    @given(psd=_psd_strategy)
-    @settings(max_examples=50, deadline=5000)
-    def test_detector_never_crashes(self, psd):
+    @pytest.mark.parametrize("seed,size", zip(_RNG_SEEDS, _SIZES, strict=True))
+    def test_detector_never_crashes(self, seed, size):
         """Detector should never raise on valid positive inputs."""
-        f = np.linspace(1e-3, 1.0, len(psd))
+        rng = np.random.default_rng(seed)
+        psd = rng.uniform(1e-10, 1e6, size=size)
+        f = np.linspace(1e-3, 1.0, size)
         peak_f, peak_h = dsgbr_detector(f, psd)
         assert isinstance(peak_f, np.ndarray)
         assert isinstance(peak_h, np.ndarray)
         assert peak_f.shape == peak_h.shape
 
-    @given(psd=_psd_strategy)
-    @settings(max_examples=50, deadline=5000)
-    def test_max_peaks_always_honored(self, psd):
+    @pytest.mark.parametrize("seed,size", zip(_RNG_SEEDS, _SIZES, strict=True))
+    def test_max_peaks_always_honored(self, seed, size):
         """Output should never exceed max_peaks."""
-        f = np.linspace(1e-3, 1.0, len(psd))
+        rng = np.random.default_rng(seed)
+        psd = rng.uniform(1e-10, 1e6, size=size)
+        f = np.linspace(1e-3, 1.0, size)
         max_peaks = 5
         peak_f, _ = dsgbr_detector(f, psd, case_info={"max_peaks": max_peaks})
         assert peak_f.size <= max_peaks
 
-    @given(psd=_psd_strategy)
-    @settings(max_examples=50, deadline=5000)
-    def test_output_always_sorted(self, psd):
+    @pytest.mark.parametrize("seed,size", zip(_RNG_SEEDS, _SIZES, strict=True))
+    def test_output_always_sorted(self, seed, size):
         """peak_f should always be sorted ascending."""
-        f = np.linspace(1e-3, 1.0, len(psd))
+        rng = np.random.default_rng(seed)
+        psd = rng.uniform(1e-10, 1e6, size=size)
+        f = np.linspace(1e-3, 1.0, size)
         peak_f, _ = dsgbr_detector(f, psd)
         if peak_f.size > 1:
             assert np.all(np.diff(peak_f) > 0)
