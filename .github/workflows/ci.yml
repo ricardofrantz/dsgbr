@@ -32,7 +32,7 @@ jobs:
       - name: Install uv
         uses: astral-sh/setup-uv@v4
       - name: Install QA and test dependencies
-        run: uv pip install -e ".[qa,tests]"
+        run: uv pip install --system -e ".[qa,tests]"
       - name: Run pre-commit
         run: pre-commit run --all-files
 
@@ -58,7 +58,7 @@ jobs:
       - name: Install uv
         uses: astral-sh/setup-uv@v4
       - name: Install test dependencies
-        run: uv pip install -e ".[tests,tests-extra]"
+        run: uv pip install --system -e ".[tests,tests-extra]"
       - name: Run tests
         run: pytest --cov=dsgbr --cov-report=xml --cov-report=term-missing
       - name: Upload coverage to Codecov
@@ -85,7 +85,7 @@ jobs:
       - name: Install uv
         uses: astral-sh/setup-uv@v4
       - name: Install build tooling
-        run: uv pip install build twine
+        run: uv pip install --system build twine
       - name: Build package
         run: uv build
       - name: Validate package

@@ -40,7 +40,7 @@ jobs:
         uses: astral-sh/setup-uv@v4
 
       - name: Install build tooling
-        run: uv pip install build twine
+        run: uv pip install --system build twine
 
       - name: Build distributions
         run: uv build
