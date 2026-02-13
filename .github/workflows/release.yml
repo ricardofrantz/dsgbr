@@ -37,7 +37,9 @@ jobs:
           python-version: "3.12"
 
       - name: Install uv
-        uses: astral-sh/setup-uv@v4
+        uses: astral-sh/setup-uv@e4db8464a088ece1b920f60402e813ea4de65b8f # v4
+        with:
+          enable-cache: false
 
       - name: Install build tooling
         run: uv pip install --system build twine
@@ -49,5 +51,5 @@ jobs:
         run: uv run twine check dist/*
 
       - name: Publish to PyPI
-        uses: pypa/gh-action-pypi-publish@release/v1
+        uses: pypa/gh-action-pypi-publish@106e0b0b7c337fa67ed433972f777c6357f78598 # v1.13.0
         if: github.ref_type == 'tag' || github.event.inputs.publish == 'true'
