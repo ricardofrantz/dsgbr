@@ -1,0 +1,91 @@
+name: CI
+
+on:
+  push:
+    branches: [main, master, release/**]
+    tags:
+      - "v*.*.*"
+  pull_request:
+  schedule:
+    - cron: "0 0 * * 1"
+
+concurrency:
+  group: "${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}"
+  cancel-in-progress: true
+
+permissions: {}
+
+jobs:
+  qa:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Install uv
+        uses: astral-sh/setup-uv@v4
+      - name: Install QA and test dependencies
+        run: uv pip install -e ".[qa,tests]"
+      - name: Run pre-commit
+        run: pre-commit run --all-files
+
+  test:
+    needs: qa
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest, macos-latest]
+        python-version: ["3.10", "3.11", "3.12"]
+    runs-on: ${{ matrix.os }}
+    permissions:
+      contents: read
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+      - name: Install uv
+        uses: astral-sh/setup-uv@v4
+      - name: Install test dependencies
+        run: uv pip install -e ".[tests,tests-extra]"
+      - name: Run tests
+        run: pytest
+
+  build:
+    needs: test
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Install uv
+        uses: astral-sh/setup-uv@v4
+      - name: Install build tooling
+        run: uv pip install build twine
+      - name: Build package
+        run: uv build
+      - name: Validate package
+        run: uv run twine check dist/*
+      - name: Store built artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: built-dist
+          path: dist/*
