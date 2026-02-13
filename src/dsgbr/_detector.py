@@ -21,7 +21,7 @@ from dsgbr._config import DetectionConfig
 from dsgbr._selection import select_peaks_by_frequency_bands
 
 try:  # SciPy <1.12 compatibility
-    from scipy.signal import PeakPropertyWarning  # type: ignore[attr-defined]
+    from scipy.signal import PeakPropertyWarning
 except ImportError:  # pragma: no cover - fallback for older SciPy
 
     class PeakPropertyWarning(RuntimeWarning):  # type: ignore[no-redef]
@@ -194,8 +194,8 @@ def compute_support_series(
         ``candidate_indices``, ``accepted_indices``, ``peak_frequencies``,
         ``peak_heights``.
     """
-    _, _, support = dsgbr_detector(frequencies, psd, case_info=case_info, return_support=True)
-    return support
+    result = dsgbr_detector(frequencies, psd, case_info=case_info, return_support=True)
+    return result[2]  # type: ignore[index]  # return_support=True guarantees 3-tuple
 
 
 # ---------------------------------------------------------------------------
