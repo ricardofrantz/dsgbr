@@ -195,7 +195,7 @@ def compute_support_series(
         ``peak_heights``.
     """
     result = dsgbr_detector(frequencies, psd, case_info=case_info, return_support=True)
-    return result[2]  # type: ignore[index]  # return_support=True guarantees 3-tuple
+    return result[2]  # type: ignore[misc]  # return_support=True guarantees 3-tuple
 
 
 # ---------------------------------------------------------------------------
